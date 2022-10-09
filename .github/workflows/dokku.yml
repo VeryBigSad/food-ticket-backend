@@ -13,7 +13,6 @@ jobs:
     - id: deploy
       name: Deploy to dokku
       uses: vitalyliber/dokku-github-action@v7.0
-      
       env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: s2.zloserver.com
