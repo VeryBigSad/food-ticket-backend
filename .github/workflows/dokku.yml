@@ -17,7 +17,7 @@ jobs:
       uses: vitalyliber/dokku-github-action@v7.0
       env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.HOST }}
+          HOST: s2.zloserver.com
           PORT: 34001
           PROJECT: 'dtb'
           FORCE_DEPLOY: true
