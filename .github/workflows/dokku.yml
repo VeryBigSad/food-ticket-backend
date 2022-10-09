@@ -18,7 +18,7 @@ jobs:
       env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
-          PORT: ${{ secrets.SSH_PORT }}
+          PORT: 34001
           PROJECT: 'dtb'
           FORCE_DEPLOY: true
           
