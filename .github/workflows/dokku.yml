@@ -15,7 +15,7 @@ jobs:
     - id: deploy
       name: Deploy to dokku
       uses: vitalyliber/dokku-github-action@v7.0
-      with:
+      env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
           PORT: ${{ secrets.SSH_PORT }}
