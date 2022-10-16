@@ -16,6 +16,7 @@ from tgbot.handlers.utils import files, error
 from tgbot.handlers.admin import handlers as admin_handlers
 from tgbot.handlers.onboarding import handlers as onboarding_handlers
 from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
+from tgbot.handlers.food_tickets import handlers as food_tickets_handlers
 from tgbot.main import bot
 
 
@@ -26,7 +27,11 @@ def setup_dispatcher(dp):
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
     dp.add_handler(CommandHandler("help", onboarding_handlers.command_help))
+    dp.add_handler(CommandHandler("support", onboarding_handlers.command_support))
     dp.add_handler(CommandHandler("register", onboarding_handlers.command_register))
+
+    # food tickets
+    dp.add_handler(CommandHandler("get_code", food_tickets_handlers.command_get_code))
 
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
