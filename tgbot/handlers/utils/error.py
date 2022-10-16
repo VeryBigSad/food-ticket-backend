@@ -26,11 +26,12 @@ def send_stacktrace_to_tg_chat(update: Update, context: CallbackContext) -> None
     )
 
     user_message = """
-😔 Something broke inside the bot.
-It is because we are constantly improving our service but sometimes we might forget to test some basic stuff.
-We already received all the details to fix the issue.
-Return to /start
+😔 Сорян, внутри бота что-то сломалось(
+Разработчики уже оповещены, и скоро этот баг пофиксят! Если у тебя что-то критичное, пиши в /support
 """
+    komaru_panick_sticker = 'CAACAgIAAxkBAAIRi2NMbNZu0Gk6d3vqsmSYpMbzhhLeAALIEgACJkrRS7YUmvotbKiiKgQ'
+
+    context.bot.send_sticker(chat_id=u.user_id, sticker=komaru_panick_sticker)
     context.bot.send_message(
         chat_id=u.user_id,
         text=user_message,
