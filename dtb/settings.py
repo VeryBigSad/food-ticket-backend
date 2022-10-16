@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     # local apps
     'users.apps.UsersConfig',
-    'arcgis',
+    'food_tickets.apps.FoodTicketsConfig'
 ]
 
 MIDDLEWARE = [

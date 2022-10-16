@@ -39,7 +39,7 @@ import telegram
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from users.models import User
+from users.models import TelegramUser
 
 ALL_TG_FILE_TYPES = ["document", "video_note", "voice", "sticker", "audio", "video", "animation", "photo"]
 
@@ -58,7 +58,7 @@ def _get_file_id(m: Dict) -> str:
 
 def show_file_id(update: Update, context: CallbackContext) -> None:
     """ Returns file_id of the attached file/media """
-    u = User.get_user(update, context)
+    u = TelegramUser.get_user(update, context)
 
     if u.is_admin:
         update_json = update.to_dict()

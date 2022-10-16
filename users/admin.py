@@ -4,15 +4,14 @@ from django.shortcuts import render
 
 from dtb.settings import DEBUG
 
-from users.models import Location
-from users.models import User
+from users.models import TelegramUser
 from users.forms import BroadcastForm
 
 from users.tasks import broadcast_message
 from tgbot.handlers.broadcast_message.utils import send_one_message
 
 
-@admin.register(User)
+@admin.register(TelegramUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = [
         'user_id', 'username', 'first_name', 'last_name', 
@@ -49,6 +48,3 @@ class UserAdmin(admin.ModelAdmin):
             )
 
 
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user_id', 'created_at']

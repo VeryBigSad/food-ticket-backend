@@ -17,7 +17,7 @@ class AdminUserManager(Manager):
         return super().get_queryset().filter(is_admin=True)
 
 
-class User(CreateUpdateTracker):
+class TelegramUser(CreateUpdateTracker):
     user_id = models.PositiveBigIntegerField(primary_key=True)  # telegram_id
     username = models.CharField(max_length=32, **nb)
     first_name = models.CharField(max_length=256)
@@ -36,7 +36,7 @@ class User(CreateUpdateTracker):
         return f'@{self.username}' if self.username is not None else f'{self.user_id}'
 
     @classmethod
-    def get_user_and_created(cls, update: Update, context: CallbackContext) -> Tuple[User, bool]:
+    def get_user_and_created(cls, update: Update, context: CallbackContext) -> Tuple[TelegramUser, bool]:
         """ python-telegram-bot's Update, Context --> User instance """
         data = extract_user_data_from_update(update)
         u, created = cls.objects.update_or_create(user_id=data["user_id"], defaults=data)
@@ -52,12 +52,12 @@ class User(CreateUpdateTracker):
         return u, created
 
     @classmethod
-    def get_user(cls, update: Update, context: CallbackContext) -> User:
+    def get_user(cls, update: Update, context: CallbackContext) -> TelegramUser:
         u, _ = cls.get_user_and_created(update, context)
         return u
 
     @classmethod
-    def get_user_by_username_or_user_id(cls, username_or_user_id: Union[str, int]) -> Optional[User]:
+    def get_user_by_username_or_user_id(cls, username_or_user_id: Union[str, int]) -> Optional[TelegramUser]:
         """ Search user in DB, return User or None if not found """
         username = str(username_or_user_id).replace("@", "").strip().lower()
         if username.isdigit():  # user_id
@@ -65,31 +65,11 @@ class User(CreateUpdateTracker):
         return cls.objects.filter(username__iexact=username).first()
 
     @property
-    def invited_users(self) -> QuerySet[User]:
-        return User.objects.filter(deep_link=str(self.user_id), created_at__gt=self.created_at)
+    def invited_users(self) -> QuerySet[TelegramUser]:
+        return TelegramUser.objects.filter(deep_link=str(self.user_id), created_at__gt=self.created_at)
 
     @property
     def tg_str(self) -> str:
         if self.username:
             return f'@{self.username}'
         return f"{self.first_name} {self.last_name}" if self.last_name else f"{self.first_name}"
-
-
-class Location(CreateTracker):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-
-    objects = GetOrNoneManager()
-
-    def __str__(self):
-        return f"user: {self.user}, created at {self.created_at.strftime('(%H:%M, %d %B %Y)')}"
-
-    def save(self, *args, **kwargs):
-        super(Location, self).save(*args, **kwargs)
-        # Parse location with arcgis
-        from arcgis.tasks import save_data_from_arcgis
-        if DEBUG:
-            save_data_from_arcgis(latitude=self.latitude, longitude=self.longitude, location_id=self.pk)
-        else:
-            save_data_from_arcgis.delay(latitude=self.latitude, longitude=self.longitude, location_id=self.pk)

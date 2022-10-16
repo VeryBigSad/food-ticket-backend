@@ -9,13 +9,13 @@ from .manage_data import CONFIRM_DECLINE_BROADCAST, CONFIRM_BROADCAST
 from .keyboards import keyboard_confirm_decline_broadcasting
 from .static_text import broadcast_command, broadcast_wrong_format, broadcast_no_access, error_with_html, \
     message_is_sent, declined_message_broadcasting
-from users.models import User
+from users.models import TelegramUser
 from users.tasks import broadcast_message
 
 
 def broadcast_command_with_message(update: Update, context: CallbackContext):
     """ Type /broadcast <some_text>. Then check your message in HTML format and broadcast to users."""
-    u = User.get_user(update, context)
+    u = TelegramUser.get_user(update, context)
 
     if not u.is_admin:
         update.message.reply_text(
@@ -59,7 +59,7 @@ def broadcast_decision_handler(update: Update, context: CallbackContext) -> None
 
     if broadcast_decision == CONFIRM_BROADCAST:
         admin_text = message_is_sent
-        user_ids = list(User.objects.all().values_list('user_id', flat=True))
+        user_ids = list(TelegramUser.objects.all().values_list('user_id', flat=True))
 
         if DEBUG:
             broadcast_message(
