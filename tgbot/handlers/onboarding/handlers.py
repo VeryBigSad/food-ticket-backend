@@ -29,6 +29,11 @@ def command_help(update: Update, context: CallbackContext) -> None:
     update.message.reply_sticker(KOMARU_STICKER_HELP_COMMAND)
 
 
+def command_support(update: Update, context: CallbackContext) -> None:
+    u, created = TelegramUser.get_user_and_created(update, context)
+    update.message.reply_text(static_text.support_command)
+
+
 def command_register(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
 
@@ -47,7 +52,7 @@ def command_register(update: Update, context: CallbackContext) -> None:
             student_obj.telegram_account = u
             student_obj.save()
         else:
-            text = static_text.register_failed
+            text = static_text.register_code_bad
         update.message.reply_text(text)
 
 
