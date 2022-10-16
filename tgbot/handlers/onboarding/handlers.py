@@ -21,6 +21,11 @@ def command_start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text=text)
 
 
+def command_help(update: Update, context: CallbackContext) -> None:
+    u, created = TelegramUser.get_user_and_created(update, context)
+    update.message.reply_sticker(static_text.help_command)
+
+
 def command_register(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
 
