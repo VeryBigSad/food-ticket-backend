@@ -1,2 +1,4 @@
-start_created = "Sup, {first_name}!"
-start_not_created = "Welcome back, {first_name}!"
+start_created = "Привет, друг! С помощью этого бота ты можешь получать завтраки и обеды в нашей столовой без " \
+                "талончиков! "
+register_successful = 'Ты успешно зарегистровался'
+help_command_usage = 'Бля, меня не ебёт что у тебя за проблемы, бб другалёк'
