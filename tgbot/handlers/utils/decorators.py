@@ -1,3 +1,4 @@
+
 from functools import wraps
 from typing import Callable
 
@@ -18,3 +19,4 @@ def registered_only(func: Callable):
         bot.send_message(chat_id=update.effective_message.chat_id, text=SORRY_NOT_CONNECTED_ACCOUNT)
 
     return command_func
+
