@@ -9,6 +9,8 @@ from tgbot.handlers.onboarding import static_text
 from tgbot.handlers.utils.info import extract_user_data_from_update
 from users.models import TelegramUser
 
+KOMARU_STICKER_HELP_COMMAND = 'CAACAgIAAxkBAAEGHNxjTEiepf7K1JhAzOsiOSjfs02UtAAC5BcAApI90EslNSSrAZreXyoE'
+
 
 def command_start(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
@@ -23,7 +25,8 @@ def command_start(update: Update, context: CallbackContext) -> None:
 
 def command_help(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
-    update.message.reply_sticker(static_text.help_command)
+    update.message.reply_text(static_text.help_command)
+    update.message.reply_sticker(KOMARU_STICKER_HELP_COMMAND)
 
 
 def command_register(update: Update, context: CallbackContext) -> None:
