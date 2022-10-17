@@ -1,7 +1,6 @@
 from django.db import models
 
 from food_tickets.utils import random_secret_code
-from users.models import TelegramUser
 from utils.models import nb
 
 
@@ -12,8 +11,13 @@ class Student(models.Model):
     grade = models.CharField(max_length=8)  # 8А, 11Б
 
     secret_code = models.CharField(max_length=256, default=random_secret_code, **nb)
+    telegram_account = models.OneToOneField('users.TelegramUser', on_delete=models.CASCADE, **nb)
 
-    telegram_account = models.ForeignKey(TelegramUser, on_delete=models.CASCADE)
+    @property
+    def first_name(self):
+        if len(self.full_name.split()) >= 2:
+            return self.full_name.split()[1]
+        return self.full_name
 
 
 class FoodAccessLog(models.Model):

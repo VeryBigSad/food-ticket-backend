@@ -8,6 +8,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from dtb.settings import DEBUG
+from food_tickets.models import Student
 from tgbot.handlers.utils.info import extract_user_data_from_update
 from utils.models import CreateUpdateTracker, nb, CreateTracker, GetOrNoneManager
 

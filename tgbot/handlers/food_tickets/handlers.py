@@ -12,7 +12,7 @@ from users.models import TelegramUser
 
 
 @registered_only
-def get_qr_code(update: Update, context: CallbackContext) -> None:
+def command_get_code(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
     update.message.reply_text(static_text.get_qr_code_success)
 
