@@ -24,6 +24,7 @@ def setup_dispatcher(dp):
     """
     Adding handlers for events from Telegram
     """
+
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
     dp.add_handler(CommandHandler("help", onboarding_handlers.command_help))
@@ -32,6 +33,7 @@ def setup_dispatcher(dp):
 
     # food tickets
     dp.add_handler(CommandHandler("get_code", food_tickets_handlers.command_get_code))
+    dp.add_handler(CommandHandler("share_code", food_tickets_handlers.command_share_code))
 
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
