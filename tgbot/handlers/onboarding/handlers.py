@@ -49,12 +49,16 @@ def command_register(update: Update, context: CallbackContext) -> None:
         student_obj = Student.objects.filter(secret_code=code)
         if student_obj.exists():
             student_obj = student_obj[0]
-            text = static_text.register_successful.format(
-                full_name=student_obj.full_name,
-                date_of_birth=student_obj.date_of_birth
-            )
-            student_obj.telegram_account = u
-            student_obj.save()
+            if hasattr(student_obj, 'telegram_account'):
+                text = static_text.code_already_in_use
+            else:
+                text = static_text.register_successful.format(
+                    full_name=student_obj.full_name,
+                    date_of_birth=student_obj.date_of_birth,
+                    grade=student_obj.grade
+                )
+                student_obj.telegram_account = u
+                student_obj.save()
         else:
             text = static_text.register_code_bad
         update.message.reply_text(text)

@@ -6,7 +6,8 @@ from food_tickets.models import Student
 from tgbot.main import bot
 from users.models import TelegramUser
 
-SORRY_NOT_CONNECTED_ACCOUNT = 'Сорян, твой аккаунт не законечкен. Напиши /register <код, который тебе выдали>'
+SORRY_NOT_CONNECTED_ACCOUNT = 'Сорян, ты не можешь это сделать т.к. твой аккаунт еще не зарегистрирован.\n' \
+                              'Воспользуйся /register чтобы зарегистрироваться'
 
 
 def registered_only(func: Callable):
