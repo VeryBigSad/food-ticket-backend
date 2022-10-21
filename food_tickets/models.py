@@ -31,8 +31,7 @@ class Student(models.Model):
 
         from tgbot.handlers.food_tickets.utils import get_ft_type_by_time
         ft_type = get_ft_type_by_time(datetime.datetime.today())
-        if self.has_food_right and not\
-                FoodTicket.objects.filter(ticket_sponsor=self, date_usable_at=datetime.date.today(), type=ft_type).exists():
+        if self.has_food_right and not FoodTicket.objects.filter(ticket_sponsor=self, date_usable_at=datetime.date.today(), type=ft_type).exists():
             return True
         return False
 

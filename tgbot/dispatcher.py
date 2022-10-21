@@ -10,6 +10,7 @@ from telegram.ext import (
 from dtb.settings import DEBUG
 from tgbot.handlers.broadcast_message.manage_data import CONFIRM_DECLINE_BROADCAST
 from tgbot.handlers.broadcast_message.static_text import broadcast_command
+from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE
 from tgbot.handlers.onboarding.manage_data import SECRET_LEVEL_BUTTON
 
 from tgbot.handlers.utils import files, error
@@ -33,7 +34,11 @@ def setup_dispatcher(dp):
 
     # food tickets
     dp.add_handler(CommandHandler("get_code", food_tickets_handlers.command_get_code))
+    dp.add_handler(CommandHandler("info", food_tickets_handlers.command_info))
     dp.add_handler(CommandHandler("share_code", food_tickets_handlers.command_share_code))
+    dp.add_handler(
+        CallbackQueryHandler(food_tickets_handlers.share_callback_handler, pattern=f'^{CONFIRM_DECLINE_SHARE}')
+    )
 
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
