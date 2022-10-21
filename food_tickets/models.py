@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 
+from food_tickets.managers import FoodTicketManager, FoodAccessLogManager
 from food_tickets.utils import random_secret_code
 from utils.models import nb
 
@@ -24,6 +25,27 @@ class Student(models.Model):
             return self.full_name.split()[1]
         return self.full_name
 
+    @property
+    def can_create_ticket_for_today(self):
+        """ returns whether he can create a code rn """
+
+        from tgbot.handlers.food_tickets.utils import get_ft_type_by_time
+        ft_type = get_ft_type_by_time(datetime.datetime.today())
+        if self.has_food_right and not\
+                FoodTicket.objects.filter(ticket_sponsor=self, date_usable_at=datetime.date.today(), type=ft_type).exists():
+            return True
+        return False
+
+    def get_ticket_for_today(self, ft_type):
+        try:
+            return FoodTicket.objects.get_existing_ticket(
+                date=datetime.date.today(),
+                ft_type=ft_type,
+                student=self
+            )
+        except FoodTicket.DoesNotExist:
+            return None
+
     def __str__(self):
         return self.full_name
 
@@ -41,17 +63,26 @@ class FoodTicket(models.Model):
 
     ticket_sponsor = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name='Спонсор тикета')
     time_created_at = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(Student, related_name='foodticket_owner', on_delete=models.CASCADE, verbose_name='Пользователь тикета')
-    expiry_date = models.DateTimeField('Время истечения')
+    owner = models.ForeignKey(
+        Student, related_name='foodticket_owner',
+        on_delete=models.CASCADE, verbose_name='Пользователь тикета'
+    )
+    date_usable_at = models.DateField('День, когда этот тикет можно использовать')
     type = models.CharField('Тип тикета', max_length=16, choices=TYPE_CHOICE)
 
+    objects = FoodTicketManager()
+
     @property
-    def is_active(self):
-        return datetime.datetime.now() < self.expiry_date
+    def is_available(self):
+        """ returns whether the ticket had been used or not """
+        if (hasattr(self, 'foodaccesslog') and self.foodaccesslog is not None) \
+                or self.date_usable_at != datetime.date.today():
+            return False
+        return True
 
 
 class FoodAccessLog(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     food_ticket = models.OneToOneField(FoodTicket, on_delete=models.CASCADE)
 
-
+    objects = FoodAccessLogManager()
