@@ -68,4 +68,21 @@ def command_register(update: Update, context: CallbackContext) -> None:
         update.message.reply_text(text)
 
 
-
+def command_info(update: Update, context: CallbackContext) -> None:
+    u = TelegramUser.get_user(update, context)
+    if not (hasattr(u, 'student') and u.student is not None):
+        update.message.reply_text(static_text.info_command_dont_know_you)
+    else:
+        last_time_eaten = u.student.foodticket_set.filter(foodaccesslog__isnull=False).order_by('-foodaccesslog__datetime_created').first()
+        if last_time_eaten is None:
+            last_time_eaten_text = static_text.you_have_not_eaten_yet
+        else:
+            last_time_eaten_text = f'{last_time_eaten.foodaccesslog.datetime_created.strftime("%d.%m.%Y %H:%M:%S")}, ' \
+                                   f'{last_time_eaten.get_type_display()}'
+        update.message.reply_html(static_text.info_command.format(
+            full_name=u.student.full_name,
+            grade=u.student.grade,
+            date_of_birth=u.student.date_of_birth,
+            last_time_eaten=last_time_eaten_text,
+            has_food_right='есть🎉' if u.student.has_food_right else 'нет'
+        ))

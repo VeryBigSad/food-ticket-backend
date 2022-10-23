@@ -32,9 +32,11 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("support", onboarding_handlers.command_support))
     dp.add_handler(CommandHandler("register", onboarding_handlers.command_register))
 
+    # something in-between these two
+    dp.add_handler(CommandHandler("info", onboarding_handlers.command_info))
+
     # food tickets
     dp.add_handler(CommandHandler("get_code", food_tickets_handlers.command_get_code))
-    dp.add_handler(CommandHandler("info", food_tickets_handlers.command_info))
     dp.add_handler(CommandHandler("share_code", food_tickets_handlers.command_share_code))
     dp.add_handler(
         CallbackQueryHandler(food_tickets_handlers.share_callback_handler, pattern=f'^{CONFIRM_DECLINE_SHARE}')

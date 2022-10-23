@@ -167,7 +167,4 @@ def share_callback_handler(update: Update, context: CallbackContext) -> None:
     ))
 
 
-def command_info(update: Update, context: CallbackContext) -> None:
-    # TODO: сюда вставить инфу о челе
-    #  типа фио дата рождения класс has_food_right когда последние пару раз ел
-    pass
+
