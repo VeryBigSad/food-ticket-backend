@@ -158,7 +158,7 @@ def share_callback_handler(update: Update, context: CallbackContext) -> None:
 
     bot.send_message(chat_id=share_to_student.telegram_account.user_id, text=static_text.someone_shared_ticket_with_you.format(
         first_name=u.student.first_name,
-        type=food_ticket.type,
+        type=food_ticket.get_type_display(),
         date_usable_at=food_ticket.date_usable_at
     ))
 
