@@ -81,7 +81,12 @@ class FoodTicket(models.Model):
 
 
 class FoodAccessLog(models.Model):
-    time = models.DateTimeField(auto_now_add=True)
+    datetime_created = models.DateTimeField(auto_now_add=True)
     food_ticket = models.OneToOneField(FoodTicket, on_delete=models.CASCADE)
 
     objects = FoodAccessLogManager()
+
+    @property
+    def eater(self):
+        return self.food_ticket.owner
+
