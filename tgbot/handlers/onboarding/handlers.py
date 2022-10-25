@@ -5,11 +5,9 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from food_tickets.models import Student
-from tgbot.handlers.onboarding import static_text
+from tgbot.handlers.onboarding import static_text, stickers
 from tgbot.handlers.utils.info import extract_user_data_from_update
 from users.models import TelegramUser
-
-KOMARU_STICKER_HELP_COMMAND = 'CAACAgIAAxkBAAEGHNxjTEiepf7K1JhAzOsiOSjfs02UtAAC5BcAApI90EslNSSrAZreXyoE'
 
 
 def command_start(update: Update, context: CallbackContext) -> None:
@@ -20,25 +18,25 @@ def command_start(update: Update, context: CallbackContext) -> None:
     else:
         text = static_text.start_not_registered
 
-    update.message.reply_text(text=text)
+    update.message.reply_html(text=text)
 
 
 def command_help(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
-    update.message.reply_text(static_text.help_command)
-    update.message.reply_sticker(KOMARU_STICKER_HELP_COMMAND)
+    update.message.reply_html(static_text.help_command)
+    update.message.reply_sticker(stickers.KOMARU_PACK['DO_NOT_CARE'])
 
 
 def command_support(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
-    update.message.reply_text(static_text.support_command)
+    update.message.reply_html(static_text.support_command)
 
 
 def command_register(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
 
     if hasattr(u, 'student'):
-        update.message.reply_text(static_text.register_already_done)
+        update.message.reply_html(static_text.register_already_done)
         return
 
     if len(update.message.text.split()) != 2:
@@ -57,7 +55,7 @@ def command_register(update: Update, context: CallbackContext) -> None:
             student_obj.save()
         else:
             text = static_text.register_code_bad
-        update.message.reply_text(text)
+        update.message.reply_html(text)
 
 
 
