@@ -5,11 +5,13 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from food_tickets.models import Student
-from tgbot.handlers.onboarding import static_text
-from tgbot.handlers.utils.info import extract_user_data_from_update
+from tgbot.handlers.onboarding import static_text, stickers
+from tgbot.handlers.utils.info import extract_user_data_from_update, send_typing_action
 from users.models import TelegramUser
+from tgbot.handlers.onboarding.keyboards import start_to_register
 
-KOMARU_STICKER_HELP_COMMAND = 'CAACAgIAAxkBAAEGHNxjTEiepf7K1JhAzOsiOSjfs02UtAAC5BcAApI90EslNSSrAZreXyoE'
+
+# KOMARU_STICKER_HELP_COMMAND = 'CAACAgIAAxkBAAEGHNxjTEiepf7K1JhAzOsiOSjfs02UtAAC5BcAApI90EslNSSrAZreXyoE'
 
 
 def command_start(update: Update, context: CallbackContext) -> None:
@@ -20,7 +22,8 @@ def command_start(update: Update, context: CallbackContext) -> None:
     else:
         text = static_text.start_not_registered
 
-    update.message.reply_html(text=text)
+    # рот ебал этой блядской реплай клавиатуры пошла она нахуй
+    update.message.reply_text(text=text, reply_markup=start_to_register)
 
 
 @send_typing_action
