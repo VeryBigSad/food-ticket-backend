@@ -18,6 +18,7 @@ from tgbot.handlers.admin import handlers as admin_handlers
 from tgbot.handlers.onboarding import handlers as onboarding_handlers
 from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.handlers.food_tickets import handlers as food_tickets_handlers
+from tgbot.handlers.messages import handlers as messages_handlers
 from tgbot.main import bot
 
 
@@ -31,6 +32,13 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("help", onboarding_handlers.command_help))
     dp.add_handler(CommandHandler("support", onboarding_handlers.command_support))
     dp.add_handler(CommandHandler("register", onboarding_handlers.command_register))
+
+    # back button
+    dp.add_handler(CommandHandler("back", onboarding_handlers.command_wait))
+
+    # handle message without command
+    dp.add_handler(MessageHandler(Filters.text, messages_handlers.handle_message))
+    dp.add_handler(MessageHandler(Filters.command, onboarding_handlers.handle_unknown))
 
     # something in-between these two
     dp.add_handler(CommandHandler("info", onboarding_handlers.command_info))

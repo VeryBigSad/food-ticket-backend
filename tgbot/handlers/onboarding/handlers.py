@@ -1,14 +1,15 @@
 import datetime
 
 from django.utils import timezone
-from telegram import ParseMode, Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram import ParseMode, Update, ReplyKeyboardMarkup, KeyboardButton, ForceReply
 from telegram.ext import CallbackContext
 
 from food_tickets.models import Student
+from tgbot.handlers.food_tickets.exceptions import WrongCodeException
 from tgbot.handlers.onboarding import static_text, stickers
 from tgbot.handlers.utils.info import extract_user_data_from_update, send_typing_action
 from users.models import TelegramUser
-from tgbot.handlers.onboarding.keyboards import start
+from tgbot.handlers.onboarding.keyboards import start_keyboard, help_keyboard
 
 
 # KOMARU_STICKER_HELP_COMMAND = 'CAACAgIAAxkBAAEGHNxjTEiepf7K1JhAzOsiOSjfs02UtAAC5BcAApI90EslNSSrAZreXyoE'
@@ -19,18 +20,29 @@ def command_start(update: Update, context: CallbackContext) -> None:
 
     if hasattr(u, 'student'):
         text = static_text.start_registered.format(first_name=u.student.first_name)
-        markup = start(registered=True)
+        markup = start_keyboard(registered=True)
     else:
         text = static_text.start_not_registered
-        markup = start(registered=False)
+        markup = start_keyboard(registered=False)
 
     update.message.reply_text(text=text, reply_markup=markup)
+
+
+def command_wait(update: Update, context: CallbackContext) -> None:
+    u, created = TelegramUser.get_user_and_created(update, context)
+
+    if hasattr(u, 'student'):
+        markup = start_keyboard(registered=True)
+    else:
+        markup = start_keyboard(registered=False)
+
+    update.message.reply_html(text=static_text.wait, reply_markup=markup)
 
 
 @send_typing_action
 def command_help(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
-    update.message.reply_html(static_text.help_command)
+    update.message.reply_text(static_text.help_command, reply_markup=help_keyboard())
     update.message.reply_sticker(stickers.KOMARU_PACK['DO_NOT_CARE'])
 
 
@@ -48,27 +60,14 @@ def command_register(update: Update, context: CallbackContext) -> None:
         update.message.reply_html(static_text.register_already_done)
         return
 
-    if len(update.message.text.split()) != 2:
-        update.message.reply_text(static_text.register_command_usage)
-        return
-    else:
-        code = update.message.text.split(' ')[1]
-        student_obj = Student.objects.filter(secret_code=code)
-        if student_obj.exists():
-            student_obj = student_obj[0]
-            if student_obj.telegram_account is not None:
-                text = static_text.code_already_in_use
-            else:
-                text = static_text.register_successful.format(
-                    full_name=student_obj.full_name,
-                    date_of_birth=student_obj.date_of_birth,
-                    grade=student_obj.grade
-                )
-                student_obj.telegram_account = u
-                student_obj.save()
-        else:
-            text = static_text.register_code_bad
-        update.message.reply_html(text)
+    # TODO: переделать на conversation
+    context.chat_data['register'] = True
+    update.message.reply_html(static_text.register_in_process)
+
+
+def handle_unknown(update: Update, context: CallbackContext) -> None:
+    text = static_text.unknown_command
+    update.message.reply_text(text)
 
 
 def command_info(update: Update, context: CallbackContext) -> None:

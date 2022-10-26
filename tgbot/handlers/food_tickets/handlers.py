@@ -2,7 +2,7 @@ import datetime
 from typing import Tuple
 
 from django.utils import timezone
-from telegram import ParseMode, Update
+from telegram import ParseMode, Update, ReplyKeyboardRemove, ForceReply
 from telegram.ext import CallbackContext
 
 from food_tickets.models import Student, FoodTicket
@@ -11,6 +11,7 @@ from tgbot.handlers.food_tickets.exceptions import NoFoodRightException, RightAl
 from tgbot.handlers.food_tickets.keyboards import keyboard_confirm_decline_sharing
 from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE, DECLINE_SHARE, CONFIRM_SHARE
 from tgbot.handlers.food_tickets.utils import get_ft_type_by_time
+from tgbot.handlers.onboarding.keyboards import start_keyboard
 from tgbot.handlers.utils.decorators import registered_only
 from tgbot.handlers.utils.info import extract_user_data_from_update, send_typing_action
 from tgbot.handlers.food_tickets.qr_codes import encode_data, generate_qr
@@ -81,7 +82,7 @@ def command_get_code(update: Update, context: CallbackContext) -> None:
     qr = generate_qr(expire_time, ticket.owner.id)
 
     # maybe use the is_new info to tell the dude that it's the same token?
-    update.message.reply_photo(photo=qr)
+    update.message.reply_photo(photo=qr, reply_markup=start_keyboard(registered=True))
 
 
 @send_typing_action
@@ -89,6 +90,8 @@ def command_get_code(update: Update, context: CallbackContext) -> None:
 def command_share_code(update: Update, context: CallbackContext) -> None:
     u, created = TelegramUser.get_user_and_created(update, context)
     args = update.message.text.split()
+
+    context.chat_data.shara_code = True
 
     if len(args) != 2:
         update.message.reply_text(static_text.share_qr_code_usage)
