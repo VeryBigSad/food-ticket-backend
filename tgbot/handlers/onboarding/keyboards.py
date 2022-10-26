@@ -4,10 +4,15 @@ from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE, CONFI
 from tgbot.handlers.food_tickets.static_text import confirm_ticket_share, decline_ticket_share
 
 
-def start_to_register() -> ReplyKeyboardMarkup:
-    buttons = [[
-        KeyboardButton('/register'),
-        KeyboardButton('/get_code')
-    ]]
+def start(registered=False) -> ReplyKeyboardMarkup:
+    if registered:
+        buttons = [
+            [KeyboardButton('/get_code')],
+            [KeyboardButton('/share_code')]
+        ]
+    else:
+        buttons = [[
+            KeyboardButton('/register')
+        ]]
 
-    return ReplyKeyboardMarkup(keyboard=buttons)
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)

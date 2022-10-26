@@ -1,14 +1,14 @@
 import datetime
 
 from django.utils import timezone
-from telegram import ParseMode, Update
+from telegram import ParseMode, Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import CallbackContext
 
 from food_tickets.models import Student
 from tgbot.handlers.onboarding import static_text, stickers
 from tgbot.handlers.utils.info import extract_user_data_from_update, send_typing_action
 from users.models import TelegramUser
-from tgbot.handlers.onboarding.keyboards import start_to_register
+from tgbot.handlers.onboarding.keyboards import start
 
 
 # KOMARU_STICKER_HELP_COMMAND = 'CAACAgIAAxkBAAEGHNxjTEiepf7K1JhAzOsiOSjfs02UtAAC5BcAApI90EslNSSrAZreXyoE'
@@ -19,11 +19,12 @@ def command_start(update: Update, context: CallbackContext) -> None:
 
     if hasattr(u, 'student'):
         text = static_text.start_registered.format(first_name=u.student.first_name)
+        markup = start(registered=True)
     else:
         text = static_text.start_not_registered
+        markup = start(registered=False)
 
-    # рот ебал этой блядской реплай клавиатуры пошла она нахуй
-    update.message.reply_text(text=text, reply_markup=start_to_register)
+    update.message.reply_text(text=text, reply_markup=markup)
 
 
 @send_typing_action
