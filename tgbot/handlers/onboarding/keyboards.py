@@ -1,10 +1,11 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
 
 from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE, CONFIRM_SHARE, DECLINE_SHARE
-from tgbot.handlers.food_tickets.static_text import confirm_ticket_share, decline_ticket_share
 
 
-def start_keyboard(registered=False) -> ReplyKeyboardMarkup:
+def start_keyboard(u) -> ReplyKeyboardMarkup:
+    registered = hasattr(u, 'student') and u.student
+
     if registered:
         buttons = [
             [KeyboardButton('/get_code')],
@@ -23,7 +24,6 @@ def start_keyboard(registered=False) -> ReplyKeyboardMarkup:
 def help_keyboard():
     buttons = [
         [KeyboardButton('/support')],
-        [KeyboardButton('/back')]
     ]
 
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
@@ -32,7 +32,15 @@ def help_keyboard():
 def share_code_keyboard():
     buttons = [
         [KeyboardButton('/share_code')],
-        [KeyboardButton('/help')]
+    ]
+
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+
+
+# это нигде не юзается, но мб понадобится
+def confirm_ticket_share():
+    buttons = [
+        [KeyboardButton('Да'), KeyboardButton('Нет')]
     ]
 
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
