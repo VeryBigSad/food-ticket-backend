@@ -1,5 +1,4 @@
-get_qr_code_success = 'ебать, лови код id={id}, type={type}, date_usable_at={date_usable_at}, owner={owner},' \
-                      ' sponsor={sponsor}, code={encoded}'
+get_qr_code_success = 'Вот твой QR код, он будет работать 15 минут'
 share_qr_code_success = 'скинул код твоему другу {telegram_account}'
 share_qr_code_usage = 'Напиши /share_code @telegram_username чтобы отдать свой билет на еду сегодня!'
 unknown_account_to_share_to = 'Не знаю того, кому ты пытаешься отдать обед ({username}).\n' \

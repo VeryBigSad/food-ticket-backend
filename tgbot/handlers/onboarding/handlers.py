@@ -1,18 +1,11 @@
-import datetime
-
-from django.utils import timezone
-from telegram import ParseMode, Update, ReplyKeyboardMarkup, KeyboardButton, ForceReply
+from telegram import Update
 from telegram.ext import CallbackContext
 
-from food_tickets.models import Student
-from tgbot.handlers.food_tickets.exceptions import WrongCodeException
-from tgbot.handlers.onboarding import static_text, stickers
-from tgbot.handlers.utils.info import extract_user_data_from_update, send_typing_action
+from tgbot.handlers.onboarding import static_text
+from tgbot import stickers
+from tgbot.handlers.utils.info import send_typing_action
 from users.models import TelegramUser
 from tgbot.handlers.onboarding.keyboards import start_keyboard, help_keyboard
-
-
-# KOMARU_STICKER_HELP_COMMAND = 'CAACAgIAAxkBAAEGHNxjTEiepf7K1JhAzOsiOSjfs02UtAAC5BcAApI90EslNSSrAZreXyoE'
 
 
 def command_start(update: Update, context: CallbackContext) -> None:

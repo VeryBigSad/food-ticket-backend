@@ -17,9 +17,7 @@ from tgbot.handlers.utils.info import extract_user_data_from_update, send_typing
 from tgbot.handlers.food_tickets.qr_codes import encode_data, generate_qr
 from tgbot.main import bot
 from users.models import TelegramUser
-
-
-EXPIRATION_TIME = datetime.timedelta(minutes=15)
+from tgbot.settings import EXPIRATION_TIME
 
 
 def create_or_get_existing_ticket(sponsor: Student, owner: Student) -> Tuple[FoodTicket, bool]:
@@ -73,15 +71,12 @@ def command_get_code(update: Update, context: CallbackContext) -> None:
     except NoFoodRightException:
         update.message.reply_text(static_text.no_food_right)
         return
-    text = static_text.get_qr_code_success.format(
-        id=ticket.id, type=ticket.type, date_usable_at=ticket.date_usable_at,
-        owner=ticket.owner, sponsor=ticket.ticket_sponsor, encoded=encode_data(datetime.datetime.now(), ticket.owner.id)
-    )
+    text = static_text.get_qr_code_success
 
     expire_time = datetime.datetime.now() + EXPIRATION_TIME
     qr = generate_qr(expire_time, ticket.owner.id)
 
-    # maybe use the is_new info to tell the dude that it's the same token?
+    update.message.reply_text(text)
     update.message.reply_photo(photo=qr, reply_markup=start_keyboard(registered=True))
 
 

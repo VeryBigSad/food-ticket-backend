@@ -1,10 +1,10 @@
-import os
 from io import BytesIO
 import rc4
 import json
 import qrcode
 import datetime
 from PIL import Image
+from tgbot.settings import ENCRYPTION_KEY
 
 
 def get_qr_code_image(data: str) -> Image:
@@ -19,7 +19,7 @@ def encode_data(expire_time: datetime.datetime, student_id: int) -> str:
 
     data = json.dumps(data)
 
-    encoded = rc4.rc4(data, os.environ['ENCRYPTION_KEY'])
+    encoded = rc4.rc4(data, ENCRYPTION_KEY)
     return encoded
 
 
