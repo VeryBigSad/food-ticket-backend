@@ -1,6 +1,6 @@
 pytz
 requests
-python-dotenv
+python-dotenv~=0.21.0
 
 ipython==8.5.0  # enhanced python interpreter
 
@@ -30,3 +30,5 @@ python-telegram-bot==13.11  # last sync version
 rc4
 qrcode
 django-rest-framework
+
+Pillow==9.2.0
