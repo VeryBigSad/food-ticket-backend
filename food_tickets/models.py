@@ -8,13 +8,12 @@ from utils.models import nb
 
 
 class Student(models.Model):
-    full_name = models.CharField(max_length=256)  # ФИО
-    date_of_birth = models.CharField(max_length=256)
+    full_name = models.CharField('ФИО', max_length=256)  # ФИО
 
-    grade = models.CharField(max_length=8, **nb)  # 8А, 11Б
+    grade = models.CharField('Класс', max_length=8, **nb)  # 8А, 11Б
 
     # мб переделать штуку с secret_code на что-то получше, хотя бы каждую неделю/месяц их обновлять чтобы не крали коды?
-    secret_code = models.CharField(max_length=256, default=random_secret_code, **nb)
+    secret_code = models.CharField('Секретный код ученика', max_length=256, default=random_secret_code, **nb)
     telegram_account = models.OneToOneField('users.TelegramUser', on_delete=models.CASCADE, **nb)
 
     has_food_right = models.BooleanField('Есть ли право на еду (он льготник/платит за нее?)', default=False)
@@ -31,7 +30,9 @@ class Student(models.Model):
 
         from tgbot.handlers.food_tickets.utils import get_ft_type_by_time
         ft_type = get_ft_type_by_time(datetime.datetime.today())
-        if self.has_food_right and not FoodTicket.objects.filter(ticket_sponsor=self, date_usable_at=datetime.date.today(), type=ft_type).exists():
+        if self.has_food_right and not FoodTicket.objects.filter(ticket_sponsor=self,
+                                                                 date_usable_at=datetime.date.today(),
+                                                                 type=ft_type).exists():
             return True
         return False
 
@@ -48,9 +49,12 @@ class Student(models.Model):
     def __str__(self):
         return self.full_name
 
+    class Meta:
+        verbose_name = 'Ученик'
+        verbose_name_plural = 'Ученики'
+
 
 class FoodTicket(models.Model):
-
     # Можно завтракать ток после 1 пары, т.е. с 10 40 до 11 00,
     # ставим некоторый запас + если кто-то пришел пораньше, пусть обедают
     BREAKFAST_END_TIME = datetime.time(hour=11, minute=25)
@@ -79,6 +83,10 @@ class FoodTicket(models.Model):
             return False
         return True
 
+    class Meta:
+        verbose_name = 'Талончик'
+        verbose_name_plural = 'Талончики'
+
 
 class FoodAccessLog(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
@@ -90,3 +98,6 @@ class FoodAccessLog(models.Model):
     def eater(self):
         return self.food_ticket.owner
 
+    class Meta:
+        verbose_name = 'Использованный талончик'
+        verbose_name_plural = 'Использованные талончики'

@@ -5,7 +5,7 @@ start_registered = 'Привет, {first_name}!\n' \
 wait = 'Что ты хочешь сделать?'
 register_command_usage = 'Напиши /register, а потом код который тебе дали (6 знаков и цифр, капитализация важна)'
 register_in_process = 'Напиши код который тебе дали (6 знаков и цифр, капитализация важна)'
-register_successful = 'Ты успешно зарегистрировался как {full_name} из {grade} с датой рождения {date_of_birth}! ' \
+register_successful = 'Ты успешно зарегистрировался как {full_name} из {grade}! ' \
                       'Теперь ты можешь юзать /get_code'
 register_code_bad = 'Не могу найти никого с таким кодом... Ты уверен, что ты правильно его ввел?\n'\
     'Чтобы вернуться нажми сюда -> /back'
@@ -32,7 +32,6 @@ info_command_dont_know_you = 'Пока что я про тебя ничего н
                              'Напиши /register чтобы я смог рассказать тебе информацию о тебе!'
 info_command = '<b>ФИО:</b> {full_name}\n' \
                '<b>Класс:</b> {grade}\n' \
-               '<b>Дата рождения:</b> {date_of_birth}\n' \
                '<b>Право на еду:</b> {has_food_right}\n' \
                '<b>Последний раз ел:</b> {last_time_eaten}\n'
 you_have_not_eaten_yet = 'ты еще не ел :( Чего так?'

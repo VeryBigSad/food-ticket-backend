@@ -2,5 +2,5 @@ from django import forms
 
 
 class UploadExcelForm(forms.Form):
-    pass
+    file = forms.FileField(label="Файл excel с данными по питанию")
 

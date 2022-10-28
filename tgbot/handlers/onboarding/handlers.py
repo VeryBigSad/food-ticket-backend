@@ -89,7 +89,6 @@ def register(update: Update, context: CallbackContext):
 
             text = static_text.register_successful.format(
                 full_name=student_obj.full_name,
-                date_of_birth=student_obj.date_of_birth,
                 grade=student_obj.grade
             )
             successful = True
@@ -127,7 +126,6 @@ def command_info(update: Update, context: CallbackContext) -> None:
         update.message.reply_html(static_text.info_command.format(
             full_name=u.student.full_name,
             grade=u.student.grade,
-            date_of_birth=u.student.date_of_birth,
             last_time_eaten=last_time_eaten_text,
             has_food_right='есть🎉' if u.student.has_food_right else 'нет'
         ))

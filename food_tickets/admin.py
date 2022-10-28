@@ -1,31 +1,47 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import path
 
 from .forms import UploadExcelForm
 from .models import Student, FoodAccessLog, FoodTicket
+from .utils import parse_excel_file
 
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = [
-        'full_name', 'date_of_birth', 'grade', 'secret_code', 'telegram_account', 'has_food_right',
+        'full_name', 'grade', 'secret_code', 'telegram_account', 'has_food_right',
     ]
+    list_filter = ['has_food_right', 'grade']
     search_fields = ('full_name', 'telegram_account')
-    sortable_by = ('has_food_right',)
+    sortable_by = ('has_food_right', 'grade')
 
-    def upload_excel(self, request, queryset):
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('import-excel/', self.upload_excel),
+        ]
+        return my_urls + urls
+
+    def upload_excel(self, request):
         # TODO: add docstring
         """"""
         if request.POST:
-            # return HttpResponseRedirect(request.get_full_path())
-            pass
-
+            form = UploadExcelForm(request.POST, request.FILES)
+            print(form.data)
+            if form.is_valid():
+                # TODO: transfer this to celery & notify people that they got the right to eat this week
+                student_list = parse_excel_file(request.FILES['file'])
+                Student.objects.all().update(has_food_right=False)
+                for i in student_list:
+                    Student.objects.update_or_create(full_name=i[0], grade=i[1], defaults={'has_food_right': True})
+            return HttpResponseRedirect(request.get_full_path())
         else:
             form = UploadExcelForm()
             return render(
-                request, "food_tickets/upload_excel.html", {'form': form, 'title': u'Broadcast message'}
+                request, "admin/upload_excel_form.html", {'form': form, 'title': u'Загрузить файл питания excel'}
             )
-
 
 
 @admin.register(FoodTicket)
