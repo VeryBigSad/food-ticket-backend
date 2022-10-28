@@ -1,9 +1,10 @@
-get_qr_code_success = 'ебать, лови код id={id}, type={type}, date_usable_at={date_usable_at}, owner={owner},' \
-                      ' sponsor={sponsor}'
+get_qr_code_success = 'Вот твой QR код, он будет работать 15 минут'
 share_qr_code_success = 'скинул код твоему другу {telegram_account}'
-share_qr_code_usage = 'Напиши /share_code @telegram_username чтобы отдать свой билет на еду сегодня!'
+share_qr_code_usage = 'Напиши тег друга, чтобы отдать свой билет на еду сегодня!\n'\
+    'Если не хочешь, тыкни сюда -> /back'
 unknown_account_to_share_to = 'Не знаю того, кому ты пытаешься отдать обед ({username}).\n' \
-                              'Может, ты ошибся в написании? Или твой друг еще не писал мне?'
+                              'Может, ты ошибся в написании? Или твой друг еще не писал мне?\n'\
+                                'Попробуй ещё разок'
 # TODO: поменять формулировку
 no_food_right = 'Сорян, кажется, у тебя нет прав на питание.'
 no_food_right_and_no_ticket = 'Сорян, кажется, у тебя нет ни возможности создать талончик, ни нет свободного.'

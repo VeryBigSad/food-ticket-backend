@@ -4,7 +4,7 @@
 from telegram.ext import (
     Dispatcher, Filters,
     CommandHandler, MessageHandler,
-    CallbackQueryHandler,
+    CallbackQueryHandler, ConversationHandler,
 )
 
 from dtb.settings import DEBUG
@@ -20,6 +20,8 @@ from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.handlers.food_tickets import handlers as food_tickets_handlers
 from tgbot.main import bot
 
+from tgbot.handlers.conversations.handlers import register_handler, share_code_handler, support_handler
+
 
 def setup_dispatcher(dp):
     """
@@ -29,15 +31,15 @@ def setup_dispatcher(dp):
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
     dp.add_handler(CommandHandler("help", onboarding_handlers.command_help))
-    dp.add_handler(CommandHandler("support", onboarding_handlers.command_support))
-    dp.add_handler(CommandHandler("register", onboarding_handlers.command_register))
+    dp.add_handler(support_handler)
+    dp.add_handler(register_handler)
 
     # something in-between these two
     dp.add_handler(CommandHandler("info", onboarding_handlers.command_info))
 
     # food tickets
     dp.add_handler(CommandHandler("get_code", food_tickets_handlers.command_get_code))
-    dp.add_handler(CommandHandler("share_code", food_tickets_handlers.command_share_code))
+    dp.add_handler(share_code_handler)
     dp.add_handler(
         CallbackQueryHandler(food_tickets_handlers.share_callback_handler, pattern=f'^{CONFIRM_DECLINE_SHARE}')
     )
@@ -55,6 +57,7 @@ def setup_dispatcher(dp):
         CallbackQueryHandler(broadcast_handlers.broadcast_decision_handler, pattern=f"^{CONFIRM_DECLINE_BROADCAST}")
     )
 
+    dp.add_handler(MessageHandler(Filters.command, onboarding_handlers.handle_unknown))
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)
 
