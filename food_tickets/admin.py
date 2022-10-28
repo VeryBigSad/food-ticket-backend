@@ -1,9 +1,7 @@
 from django.contrib import admin
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from dtb.settings import DEBUG
-
+from .forms import UploadExcelForm
 from .models import Student, FoodAccessLog, FoodTicket
 
 
@@ -14,6 +12,20 @@ class StudentAdmin(admin.ModelAdmin):
     ]
     search_fields = ('full_name', 'telegram_account')
     sortable_by = ('has_food_right',)
+
+    def upload_excel(self, request, queryset):
+        # TODO: add docstring
+        """"""
+        if request.POST:
+            # return HttpResponseRedirect(request.get_full_path())
+            pass
+
+        else:
+            form = UploadExcelForm()
+            return render(
+                request, "food_tickets/upload_excel.html", {'form': form, 'title': u'Broadcast message'}
+            )
+
 
 
 @admin.register(FoodTicket)
