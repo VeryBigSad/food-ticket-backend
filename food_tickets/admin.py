@@ -29,7 +29,6 @@ class StudentAdmin(admin.ModelAdmin):
         """"""
         if request.POST:
             form = UploadExcelForm(request.POST, request.FILES)
-            print(form.data)
             if form.is_valid():
                 # TODO: transfer this to celery & notify people that they got the right to eat this week
                 student_list = parse_excel_file(request.FILES['file'])

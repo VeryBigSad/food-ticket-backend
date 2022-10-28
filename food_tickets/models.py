@@ -4,10 +4,10 @@ from django.db import models
 
 from food_tickets.managers import FoodTicketManager, FoodAccessLogManager
 from food_tickets.utils import random_secret_code
-from utils.models import nb
+from utils.models import nb, CreateUpdateTracker
 
 
-class Student(models.Model):
+class Student(CreateUpdateTracker):
     full_name = models.CharField('ФИО', max_length=256)  # ФИО
 
     grade = models.CharField('Класс', max_length=8, **nb)  # 8А, 11Б
