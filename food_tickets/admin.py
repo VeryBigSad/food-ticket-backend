@@ -1,10 +1,11 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import path
+from django.urls import path, reverse
 
 from .forms import UploadExcelForm
 from .models import Student, FoodAccessLog, FoodTicket
+from .tasks import excel_update
 from .utils import parse_excel_file
 
 
@@ -26,16 +27,18 @@ class StudentAdmin(admin.ModelAdmin):
 
     def upload_excel(self, request):
         # TODO: add docstring
-        """"""
+        """ Creates/updates students based on whether they can eat or not FROM EXCEL FILE"""
         if request.POST:
             form = UploadExcelForm(request.POST, request.FILES)
             if form.is_valid():
-                # TODO: transfer this to celery & notify people that they got the right to eat this week
+                # can't send the file via celery so processing it here
+                # probably should save it AND send to celery the path but ehhh who cares
+                # it will probably work regardless
                 student_list = parse_excel_file(request.FILES['file'])
-                Student.objects.all().update(has_food_right=False)
-                for i in student_list:
-                    Student.objects.update_or_create(full_name=i[0], grade=i[1], defaults={'has_food_right': True})
-            return HttpResponseRedirect(request.get_full_path())
+                excel_update.delay(student_list)
+                messages.add_message(request, messages.INFO, 'Процесс импортирования через excel запущен! '
+                                                             'Попробуйте перезагрузить страницу и вы увидите результат')
+                return HttpResponseRedirect(reverse('admin:food_tickets_student_changelist'))
         else:
             form = UploadExcelForm()
             return render(
