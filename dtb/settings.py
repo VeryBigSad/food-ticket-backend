@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 import sys
@@ -21,6 +22,9 @@ SECRET_KEY = os.getenv(
 )
 
 API_SECRET_KEY = os.getenv("API_SECRET_KEY", 'clown3000')
+
+EXPIRATION_TIME = datetime.timedelta(minutes=15)
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
 
 if os.environ.get('DJANGO_DEBUG', default=False) in ['True', 'true', '1', True]:
     DEBUG = True

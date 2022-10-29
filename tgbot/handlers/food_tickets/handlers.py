@@ -5,6 +5,7 @@ from django.utils import timezone
 from telegram import ParseMode, Update, ReplyKeyboardRemove, ForceReply
 from telegram.ext import CallbackContext, ConversationHandler
 
+from dtb.settings import EXPIRATION_TIME
 from food_tickets.models import Student, FoodTicket
 from tgbot.handlers.food_tickets import static_text
 from tgbot.handlers.food_tickets.exceptions import NoFoodRightException, RightAlreadyExecutedException
@@ -17,7 +18,6 @@ from tgbot.handlers.utils.info import extract_user_data_from_update, send_typing
 from tgbot.handlers.food_tickets.qr_codes import encode_data, generate_qr
 from tgbot.main import bot
 from users.models import TelegramUser
-from tgbot.settings import EXPIRATION_TIME
 import tgbot.handlers.conversations.states_constants as states
 
 
