@@ -10,7 +10,7 @@ class CreateTracker(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('-created_at',)
+        ordering = ("-created_at",)
 
 
 class CreateUpdateTracker(CreateTracker):
@@ -22,6 +22,7 @@ class CreateUpdateTracker(CreateTracker):
 
 class GetOrNoneManager(models.Manager):
     """returns none if object doesn't exist else model instance"""
+
     def get_or_none(self, **kwargs):
         try:
             return self.get(**kwargs)

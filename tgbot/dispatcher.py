@@ -2,25 +2,28 @@
     Telegram event handlers
 """
 from telegram.ext import (
-    Dispatcher, Filters,
-    CommandHandler, MessageHandler,
-    CallbackQueryHandler, ConversationHandler,
+    Dispatcher,
+    Filters,
+    CommandHandler,
+    MessageHandler,
+    CallbackQueryHandler,
 )
 
 from dtb.settings import DEBUG
+from tgbot.handlers.admin import handlers as admin_handlers
+from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.handlers.broadcast_message.manage_data import CONFIRM_DECLINE_BROADCAST
 from tgbot.handlers.broadcast_message.static_text import broadcast_command
-from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE
-from tgbot.handlers.onboarding.manage_data import SECRET_LEVEL_BUTTON
-
-from tgbot.handlers.utils import files, error
-from tgbot.handlers.admin import handlers as admin_handlers
-from tgbot.handlers.onboarding import handlers as onboarding_handlers
-from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
+from tgbot.handlers.conversations.handlers import (
+    register_handler,
+    share_code_handler,
+    support_handler,
+)
 from tgbot.handlers.food_tickets import handlers as food_tickets_handlers
+from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE
+from tgbot.handlers.onboarding import handlers as onboarding_handlers
+from tgbot.handlers.utils import error
 from tgbot.main import bot
-
-from tgbot.handlers.conversations.handlers import register_handler, share_code_handler, support_handler
 
 
 def setup_dispatcher(dp):
@@ -41,20 +44,29 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("get_code", food_tickets_handlers.command_get_code))
     dp.add_handler(share_code_handler)
     dp.add_handler(
-        CallbackQueryHandler(food_tickets_handlers.share_callback_handler, pattern=f'^{CONFIRM_DECLINE_SHARE}')
+        CallbackQueryHandler(
+            food_tickets_handlers.share_callback_handler,
+            pattern=f"^{CONFIRM_DECLINE_SHARE}",
+        )
     )
 
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
-    dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
+    dp.add_handler(CommandHandler("export_users", admin_handlers.export_users))
 
     # broadcast message
     dp.add_handler(
-        MessageHandler(Filters.regex(rf'^{broadcast_command}(/s)?.*'), broadcast_handlers.broadcast_command_with_message)
+        MessageHandler(
+            Filters.regex(rf"^{broadcast_command}(/s)?.*"),
+            broadcast_handlers.broadcast_command_with_message,
+        )
     )
     dp.add_handler(
-        CallbackQueryHandler(broadcast_handlers.broadcast_decision_handler, pattern=f"^{CONFIRM_DECLINE_BROADCAST}")
+        CallbackQueryHandler(
+            broadcast_handlers.broadcast_decision_handler,
+            pattern=f"^{CONFIRM_DECLINE_BROADCAST}",
+        )
     )
 
     dp.add_handler(MessageHandler(Filters.command, onboarding_handlers.handle_unknown))
@@ -77,4 +89,6 @@ def setup_dispatcher(dp):
 
 
 n_workers = 0 if DEBUG else 4
-dispatcher = setup_dispatcher(Dispatcher(bot, update_queue=None, workers=n_workers, use_context=True))
+dispatcher = setup_dispatcher(
+    Dispatcher(bot, update_queue=None, workers=n_workers, use_context=True)
+)

@@ -5,7 +5,9 @@ import pandas as pd
 
 
 def random_secret_code():
-    return ''.join([random.choice(string.ascii_letters + string.digits) for i in range(6)])
+    return "".join(
+        [random.choice(string.ascii_letters + string.digits) for i in range(6)]
+    )
 
 
 def parse_excel_file(file):

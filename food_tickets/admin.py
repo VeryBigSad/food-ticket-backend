@@ -70,16 +70,28 @@ class StudentAdmin(admin.ModelAdmin):
 @admin.register(FoodTicket)
 class FoodTicketAdmin(admin.ModelAdmin):
     list_display = [
-        'owner', 'ticket_sponsor', 'date_usable_at', 'type', 'time_created_at'
+        "owner",
+        "ticket_sponsor",
+        "date_usable_at",
+        "type",
+        "time_created_at",
     ]
-    search_fields = ('owner', 'ticket_sponsor')
-    sortable_by = ('ticket_sponsor', 'owner', 'date_usable_at', 'type', 'time_created_at')
+    search_fields = ("owner", "ticket_sponsor")
+    sortable_by = (
+        "ticket_sponsor",
+        "owner",
+        "date_usable_at",
+        "type",
+        "time_created_at",
+    )
 
 
 @admin.register(FoodAccessLog)
 class FoodAccessLogAdmin(admin.ModelAdmin):
     list_display = [
-        'datetime_created', 'eater', 'food_ticket',
+        "datetime_created",
+        "eater",
+        "food_ticket",
     ]
-    sortable_by = ('time',)
-    search_fields = ('food_ticket',)
+    sortable_by = ("time",)
+    search_fields = ("food_ticket",)

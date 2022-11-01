@@ -13,10 +13,14 @@ class Student(CreateUpdateTracker):
     grade = models.CharField('Класс', max_length=8, **nb)  # 8А, 11Б
 
     # мб переделать штуку с secret_code на что-то получше, хотя бы каждую неделю/месяц их обновлять чтобы не крали коды?
-    secret_code = models.CharField('Секретный код ученика', max_length=256, default=random_secret_code, **nb)
-    telegram_account = models.OneToOneField('users.TelegramUser', on_delete=models.CASCADE, **nb)
+    secret_code = models.CharField(max_length=256, default=random_secret_code, **nb)
+    telegram_account = models.OneToOneField(
+        "users.TelegramUser", on_delete=models.CASCADE, **nb
+    )
 
-    has_food_right = models.BooleanField('Есть ли право на еду (он льготник/платит за нее?)', default=False)
+    has_food_right = models.BooleanField(
+        "Есть ли право на еду (он льготник/платит за нее?)", default=False
+    )
 
     @property
     def first_name(self):
@@ -26,22 +30,24 @@ class Student(CreateUpdateTracker):
 
     @property
     def can_create_ticket_for_today(self):
-        """ returns whether he can create a code rn """
+        """returns whether he can create a code rn"""
 
         from tgbot.handlers.food_tickets.utils import get_ft_type_by_time
+
         ft_type = get_ft_type_by_time(datetime.datetime.today())
-        if self.has_food_right and not FoodTicket.objects.filter(ticket_sponsor=self,
-                                                                 date_usable_at=datetime.date.today(),
-                                                                 type=ft_type).exists():
+        if (
+            self.has_food_right
+            and not FoodTicket.objects.filter(
+                ticket_sponsor=self, date_usable_at=datetime.date.today(), type=ft_type
+            ).exists()
+        ):
             return True
         return False
 
     def get_ticket_for_today(self, ft_type):
         try:
             return FoodTicket.objects.get_existing_ticket(
-                date=datetime.date.today(),
-                ft_type=ft_type,
-                student=self
+                date=datetime.date.today(), ft_type=ft_type, student=self
             )
         except FoodTicket.DoesNotExist:
             return None
@@ -59,27 +65,29 @@ class FoodTicket(models.Model):
     # ставим некоторый запас + если кто-то пришел пораньше, пусть обедают
     BREAKFAST_END_TIME = datetime.time(hour=11, minute=25)
 
-    TYPE_CHOICE = (
-        ('breakfast', 'Завтрак'),
-        ('lunch', 'Обед')
-    )
+    TYPE_CHOICE = (("breakfast", "Завтрак"), ("lunch", "Обед"))
 
-    ticket_sponsor = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name='Спонсор тикета')
+    ticket_sponsor = models.ForeignKey(
+        Student, on_delete=models.CASCADE, verbose_name="Спонсор тикета"
+    )
     time_created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(
-        Student, related_name='foodticket_owner',
-        on_delete=models.CASCADE, verbose_name='Пользователь тикета'
+        Student,
+        related_name="foodticket_owner",
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь тикета",
     )
-    date_usable_at = models.DateField('День, когда этот тикет можно использовать')
-    type = models.CharField('Тип тикета', max_length=16, choices=TYPE_CHOICE)
+    date_usable_at = models.DateField("День, когда этот тикет можно использовать")
+    type = models.CharField("Тип тикета", max_length=16, choices=TYPE_CHOICE)
 
     objects = FoodTicketManager()
 
     @property
     def is_available(self):
-        """ returns whether the ticket had been used or not """
-        if (hasattr(self, 'foodaccesslog') and self.foodaccesslog is not None) \
-                or self.date_usable_at != datetime.date.today():
+        """returns whether the ticket had been used or not"""
+        if (
+            hasattr(self, "foodaccesslog") and self.foodaccesslog is not None
+        ) or self.date_usable_at != datetime.date.today():
             return False
         return True
 
