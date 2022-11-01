@@ -4,14 +4,13 @@ from django.db import models
 
 from food_tickets.managers import FoodTicketManager, FoodAccessLogManager
 from food_tickets.utils import random_secret_code
-from utils.models import nb
+from utils.models import nb, CreateUpdateTracker
 
 
-class Student(models.Model):
-    full_name = models.CharField(max_length=256)  # ФИО
-    date_of_birth = models.CharField(max_length=256)
+class Student(CreateUpdateTracker):
+    full_name = models.CharField('ФИО', max_length=256)  # ФИО
 
-    grade = models.CharField(max_length=8, **nb)  # 8А, 11Б
+    grade = models.CharField('Класс', max_length=8, **nb)  # 8А, 11Б
 
     # мб переделать штуку с secret_code на что-то получше, хотя бы каждую неделю/месяц их обновлять чтобы не крали коды?
     secret_code = models.CharField(max_length=256, default=random_secret_code, **nb)
@@ -56,9 +55,12 @@ class Student(models.Model):
     def __str__(self):
         return self.full_name
 
+    class Meta:
+        verbose_name = 'Ученик'
+        verbose_name_plural = 'Ученики'
+
 
 class FoodTicket(models.Model):
-
     # Можно завтракать ток после 1 пары, т.е. с 10 40 до 11 00,
     # ставим некоторый запас + если кто-то пришел пораньше, пусть обедают
     BREAKFAST_END_TIME = datetime.time(hour=11, minute=25)
@@ -89,6 +91,10 @@ class FoodTicket(models.Model):
             return False
         return True
 
+    class Meta:
+        verbose_name = 'Талончик'
+        verbose_name_plural = 'Талончики'
+
 
 class FoodAccessLog(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
@@ -99,3 +105,7 @@ class FoodAccessLog(models.Model):
     @property
     def eater(self):
         return self.food_ticket.owner
+
+    class Meta:
+        verbose_name = 'Использованный талончик'
+        verbose_name_plural = 'Использованные талончики'

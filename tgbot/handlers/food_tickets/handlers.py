@@ -6,6 +6,7 @@ from telegram.ext import CallbackContext, ConversationHandler
 
 import tgbot.handlers.conversations.states_constants as states
 import tgbot.handlers.onboarding.keyboards as keyboards
+from dtb.settings import EXPIRATION_TIME
 from food_tickets.models import Student, FoodTicket
 from tgbot.handlers.food_tickets import static_text
 from tgbot.handlers.food_tickets.exceptions import (
@@ -23,12 +24,11 @@ from tgbot.handlers.food_tickets.utils import get_ft_type_by_time
 from tgbot.handlers.utils.decorators import registered_only
 from tgbot.handlers.utils.info import send_typing_action
 from tgbot.main import bot
-from tgbot.settings import EXPIRATION_TIME
 from users.models import TelegramUser
 
 
 def create_or_get_existing_ticket(
-    sponsor: Student, owner: Student
+        sponsor: Student, owner: Student
 ) -> Tuple[FoodTicket, bool]:
     """creates a food ticket for a student (if he has the rights to do so) or gets him one he already has"""
 
@@ -114,8 +114,8 @@ def start_share(update: Update, context: CallbackContext) -> int:
 
     # checking whether we can create a code
     if (
-        not u.student.can_create_ticket_for_today
-        and u.student.get_ticket_for_today(ft_type=ft_type) is None
+            not u.student.can_create_ticket_for_today
+            and u.student.get_ticket_for_today(ft_type=ft_type) is None
     ):
         update.message.reply_text(static_text.no_food_right_and_no_ticket)
         return ConversationHandler.END

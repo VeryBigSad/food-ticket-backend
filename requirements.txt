@@ -32,3 +32,5 @@ qrcode
 django-rest-framework
 
 Pillow==9.2.0
+pandas
+openpyxl

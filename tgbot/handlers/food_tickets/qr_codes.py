@@ -4,7 +4,8 @@ import json
 import qrcode
 import datetime
 from PIL import Image
-from tgbot.settings import ENCRYPTION_KEY
+
+from dtb.settings import ENCRYPTION_KEY
 
 
 def get_qr_code_image(data: str) -> Image:

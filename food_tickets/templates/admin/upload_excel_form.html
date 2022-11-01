@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <br>
+    <input type="hidden" name="action" value="excel_upload" />
+    <input type="submit" name="apply" value="Загрузить" />
+</form>
+{% endblock %}
+

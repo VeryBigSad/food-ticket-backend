@@ -1,21 +1,19 @@
+import datetime
 import logging
 import os
 import sys
+from pathlib import Path
 
 import dj_database_url
 import dotenv
 
-from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Load env variables from file
 dotenv_file = BASE_DIR / ".env"
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv(
@@ -25,13 +23,15 @@ SECRET_KEY = os.getenv(
 
 API_SECRET_KEY = os.getenv("API_SECRET_KEY", "clown3000")
 
-if os.environ.get("DJANGO_DEBUG", default=False) in ["True", "true", "1", True]:
+EXPIRATION_TIME = datetime.timedelta(minutes=15)
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
+
+if os.environ.get('DJANGO_DEBUG', default=False) in ['True', 'true', '1', True]:
     DEBUG = True
 else:
     DEBUG = False
 
 ALLOWED_HOSTS = ["*"]  # since Telegram uses a lot of IPs for webhooks
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -74,23 +74,29 @@ ROOT_URLCONF = "dtb.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': ['food_tickets/templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ],
+            # 'loaders': [
+            #     'admin_tools.template_loaders.Loader',
+            #     ('django.template.loaders.cached.Loader', [
+            #         'django.template.loaders.filesystem.Loader',
+            #         'django.template.loaders.app_directories.Loader',
+            #     ]),
+            # ],
         },
     },
 ]
 
 WSGI_APPLICATION = "dtb.wsgi.application"
 ASGI_APPLICATION = "dtb.asgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -117,7 +123,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -130,7 +135,6 @@ USE_TZ = True
 DATE_FORMAT = "d.m.Y"
 DATETIME_FORMAT = "d.m.Y H:i:s"
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
@@ -138,7 +142,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "static")
-
 
 # -----> CELERY
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379")
@@ -150,7 +153,6 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_DEFAULT_QUEUE = "default"
-
 
 # -----> TELEGRAM
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
