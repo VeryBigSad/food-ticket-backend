@@ -2,7 +2,6 @@ from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     ReplyKeyboardMarkup,
-    KeyboardButton,
 )
 
 from tgbot.handlers.food_tickets.manage_data import (

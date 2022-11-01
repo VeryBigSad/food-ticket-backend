@@ -6,7 +6,8 @@ broadcast_wrong_format = (
     f"For example:\n"
     f"{broadcast_command} Hello, my users! This <b>bold text</b> is for you, "
     f"as well as this <i>italic text.</i>\n\n"
-    f'Examples of using <code>HTML</code> style you can found <a href="https://core.telegram.org/bots/api#html-style">here</a>.'
+    f"Examples of using <code>HTML</code> style you can found"
+    f' <a href="https://core.telegram.org/bots/api#html-style">here</a>.'
 )
 confirm_broadcast = "Confirm ✅"
 decline_broadcast = "Decline ❌"

@@ -1,4 +1,6 @@
-import os, django
+# flake8: noqa
+import django
+import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dtb.settings")
 django.setup()

@@ -1,13 +1,13 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import CallbackContext, ConversationHandler
 
+import tgbot.handlers.conversations.states_constants as states
 from food_tickets.models import Student
-from tgbot.handlers.onboarding import static_text
 from tgbot import stickers
+from tgbot.handlers.onboarding import static_text
+from tgbot.handlers.onboarding.keyboards import start_keyboard
 from tgbot.handlers.utils.info import send_typing_action
 from users.models import TelegramUser
-from tgbot.handlers.onboarding.keyboards import start_keyboard, help_keyboard
-import tgbot.handlers.conversations.states_constants as states
 
 
 def command_start(update: Update, context: CallbackContext) -> None:

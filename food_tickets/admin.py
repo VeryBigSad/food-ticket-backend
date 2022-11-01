@@ -1,8 +1,4 @@
 from django.contrib import admin
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-
-from dtb.settings import DEBUG
 
 from .models import Student, FoodAccessLog, FoodTicket
 

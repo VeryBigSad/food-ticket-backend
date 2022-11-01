@@ -1,14 +1,6 @@
 from telegram import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
     ReplyKeyboardMarkup,
     KeyboardButton,
-)
-
-from tgbot.handlers.food_tickets.manage_data import (
-    CONFIRM_DECLINE_SHARE,
-    CONFIRM_SHARE,
-    DECLINE_SHARE,
 )
 
 

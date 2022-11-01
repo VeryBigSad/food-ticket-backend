@@ -1,7 +1,6 @@
 from functools import wraps
 from typing import Callable
 
-from food_tickets.models import Student
 from tgbot.main import bot
 from users.models import TelegramUser
 

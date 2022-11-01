@@ -58,7 +58,7 @@ def send_one_message(
 ) -> bool:
     bot = telegram.Bot(tg_token)
     try:
-        m = bot.send_message(
+        bot.send_message(
             chat_id=user_id,
             text=text,
             parse_mode=parse_mode,

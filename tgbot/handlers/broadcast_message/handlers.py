@@ -1,12 +1,12 @@
-import re
-
 import telegram
 from telegram import Update
 from telegram.ext import CallbackContext
 
 from dtb.settings import DEBUG
-from .manage_data import CONFIRM_DECLINE_BROADCAST, CONFIRM_BROADCAST
+from users.models import TelegramUser
+from users.tasks import broadcast_message
 from .keyboards import keyboard_confirm_decline_broadcasting
+from .manage_data import CONFIRM_DECLINE_BROADCAST, CONFIRM_BROADCAST
 from .static_text import (
     broadcast_command,
     broadcast_wrong_format,
@@ -15,8 +15,6 @@ from .static_text import (
     message_is_sent,
     declined_message_broadcasting,
 )
-from users.models import TelegramUser
-from users.tasks import broadcast_message
 
 
 def broadcast_command_with_message(update: Update, context: CallbackContext):
@@ -58,7 +56,9 @@ def broadcast_decision_handler(update: Update, context: CallbackContext) -> None
     Shows text in HTML style with two buttons:
     Confirm and Decline
     """
-    broadcast_decision = update.callback_query.data[len(CONFIRM_DECLINE_BROADCAST) :]
+    broadcast_decision = update.callback_query.data[  # noqa
+        len(CONFIRM_DECLINE_BROADCAST) :  # noqa
+    ]  # noqa
 
     entities_for_celery = update.callback_query.message.to_dict().get("entities")
     entities, text = (

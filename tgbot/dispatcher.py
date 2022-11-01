@@ -7,27 +7,23 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     CallbackQueryHandler,
-    ConversationHandler,
 )
 
 from dtb.settings import DEBUG
+from tgbot.handlers.admin import handlers as admin_handlers
+from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.handlers.broadcast_message.manage_data import CONFIRM_DECLINE_BROADCAST
 from tgbot.handlers.broadcast_message.static_text import broadcast_command
-from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE
-from tgbot.handlers.onboarding.manage_data import SECRET_LEVEL_BUTTON
-
-from tgbot.handlers.utils import files, error
-from tgbot.handlers.admin import handlers as admin_handlers
-from tgbot.handlers.onboarding import handlers as onboarding_handlers
-from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
-from tgbot.handlers.food_tickets import handlers as food_tickets_handlers
-from tgbot.main import bot
-
 from tgbot.handlers.conversations.handlers import (
     register_handler,
     share_code_handler,
     support_handler,
 )
+from tgbot.handlers.food_tickets import handlers as food_tickets_handlers
+from tgbot.handlers.food_tickets.manage_data import CONFIRM_DECLINE_SHARE
+from tgbot.handlers.onboarding import handlers as onboarding_handlers
+from tgbot.handlers.utils import error
+from tgbot.main import bot
 
 
 def setup_dispatcher(dp):
