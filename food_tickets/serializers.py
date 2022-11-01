@@ -11,5 +11,3 @@ class FoodAccessLogSerializer(serializers.ModelSerializer):
             "datetime_created",
             "food_ticket",
         ]
-        pass
-
